@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PetCare · Household pet management, done together</title>
+<meta name="description" content="PetCare is a household pet management app: create or join a household, add pets, and log feeding, vet visits and more — with a full production pipeline on Azure. An interactive project showcase." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --ink:#1a1410;
+    --paper:#f8f4ee;
+    --paper-2:#f0e9df;
+    --line:#e0d4c4;
+    --accent:#d2762e;     /* warm amber */
+    --accent-2:#3a7a7a;
+    --muted:#736a5e;
+    --shadow:0 1px 0 rgba(0,0,0,.04), 0 18px 40px -28px rgba(26,20,16,.5);
+    --r:14px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--paper);color:var(--ink);
+    font-family:"Inter",system-ui,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+  h1,h2,h3{font-family:"Fraunces",Georgia,serif;font-weight:500;line-height:1.08;letter-spacing:-.01em}
+  a{color:var(--accent);text-decoration:none}
+  code,.mono{font-family:"JetBrains Mono",monospace}
+
+  header.bar{position:sticky;top:0;z-index:30;background:rgba(248,244,238,.85);
+    backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .bar .wrap{display:flex;align-items:center;justify-content:space-between;height:60px}
+  .brand{font-family:"Fraunces",serif;font-size:1.05rem;display:flex;align-items:center;gap:9px}
+  .paw{font-size:1.05rem}
+  nav.links a{color:var(--muted);font-size:.86rem;margin-left:22px;font-weight:500}
+  nav.links a:hover{color:var(--ink)}
+  @media(max-width:760px){nav.links{display:none}}
+
+  .hero{padding:84px 0 60px;border-bottom:1px solid var(--line)}
+  .kicker{font-family:"JetBrains Mono",monospace;font-size:.74rem;letter-spacing:.18em;
+    text-transform:uppercase;color:var(--accent);margin:0 0 18px}
+  .hero h1{font-size:clamp(2.4rem,5.4vw,4.2rem);margin:0 0 20px;max-width:15ch}
+  .hero p.lede{font-size:1.18rem;max-width:60ch;color:#2c241c;margin:0 0 30px}
+  .cta{display:flex;gap:12px;flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:11px 20px;border-radius:999px;
+    font-weight:600;font-size:.9rem;border:1px solid var(--ink);background:var(--ink);color:var(--paper);
+    transition:transform .15s ease}
+  .btn:hover{transform:translateY(-2px)}
+  .btn.ghost{background:transparent;color:var(--ink)}
+
+  /* ---- household demo ---- */
+  .demo{margin-top:52px;background:#fff;border:1px solid var(--line);border-radius:var(--r);
+    box-shadow:var(--shadow);overflow:hidden}
+  .demo .top{display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--line);
+    background:var(--paper-2);flex-wrap:wrap}
+  .demo .top .t{font-family:"Fraunces",serif;font-size:1rem}
+  .demo .top .code{margin-left:auto;font-family:"JetBrains Mono",monospace;font-size:.74rem;color:var(--muted);
+    background:#fff;border:1px solid var(--line);padding:4px 10px;border-radius:8px}
+  .demo .body{display:grid;grid-template-columns:1fr 1.3fr;gap:0}
+  @media(max-width:680px){.demo .body{grid-template-columns:1fr}}
+  .pets{padding:16px 18px;border-right:1px solid var(--line)}
+  @media(max-width:680px){.pets{border-right:none;border-bottom:1px solid var(--line)}}
+  .pets .lbl,.log .lbl{font-family:"JetBrains Mono",monospace;font-size:.66rem;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+  .petcard{display:flex;align-items:center;gap:12px;padding:10px 12px;border:1px solid var(--line);
+    border-radius:12px;margin-bottom:8px;cursor:pointer;transition:.15s;background:#fff}
+  .petcard:hover{border-color:var(--accent)}
+  .petcard[aria-pressed="true"]{background:var(--paper-2);border-color:var(--accent);box-shadow:var(--shadow)}
+  .petcard .av{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-size:1.2rem;
+    background:var(--paper-2);flex:none}
+  .petcard .nm{font-weight:600;font-size:.92rem}
+  .petcard .sp{font-size:.76rem;color:var(--muted)}
+  .log{padding:16px 18px}
+  .addrow{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+  .addrow button{font-size:.78rem;font-weight:600;padding:6px 11px;border-radius:999px;border:1px solid var(--line);
+    background:#fff;cursor:pointer;transition:.15s}
+  .addrow button:hover{border-color:var(--accent);background:var(--paper-2)}
+  .timeline{display:flex;flex-direction:column;gap:8px;max-height:230px;overflow:auto}
+  .entry{display:flex;gap:10px;align-items:flex-start;padding:9px 11px;border:1px solid var(--line);border-radius:10px;
+    animation:pop .35s ease}
+  @keyframes pop{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+  .entry .ei{font-size:1.05rem}
+  .entry .et{font-size:.86rem}
+  .entry .em{font-size:.72rem;color:var(--muted);font-family:"JetBrains Mono",monospace}
+
+  section{padding:74px 0;border-bottom:1px solid var(--line)}
+  .eyebrow{font-family:"JetBrains Mono",monospace;font-size:.72rem;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+  h2{font-size:clamp(1.8rem,3.6vw,2.6rem);margin:0 0 14px}
+  .section-lede{max-width:62ch;color:#2e261e;font-size:1.05rem}
+
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:36px}
+  @media(max-width:760px){.grid3{grid-template-columns:1fr}}
+  .card{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:24px;box-shadow:var(--shadow)}
+  .card .ic{font-size:1.5rem}
+  .card h3{font-size:1.14rem;margin:10px 0 6px}
+  .card p{margin:0;font-size:.92rem;color:#433b31}
+
+  .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:34px}
+  @media(max-width:680px){.stats{grid-template-columns:1fr}}
+  .stat{background:var(--ink);color:var(--paper);border-radius:var(--r);padding:24px}
+  .stat .num{font-family:"Fraunces",serif;font-size:2.4rem;line-height:1}
+  .stat .lab{font-size:.8rem;color:#d8cdbd;margin-top:6px}
+
+  .specs{margin-top:32px;display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+  @media(max-width:680px){.specs{grid-template-columns:1fr}}
+  .spec{background:#fff;border:1px solid var(--line);border-radius:10px;padding:12px 15px;font-size:.88rem;
+    display:flex;justify-content:space-between;gap:10px}
+  .spec b{font-family:"JetBrains Mono",monospace;font-size:.66rem;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
+
+  footer{padding:48px 0 70px}
+  footer .wrap{color:var(--muted);font-size:.85rem}
+  .reveal{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease}
+  .reveal.in{opacity:1;transform:none}
+</style>
+</head>
+<body>
+
+<header class="bar">
+  <div class="wrap">
+    <div class="brand"><span class="paw">🐾</span> PetCare</div>
+    <nav class="links">
+      <a href="#features">Features</a>
+      <a href="#quality">Quality</a>
+      <a href="#stack">Stack</a>
+    </nav>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <p class="kicker">Flask Web App · DevOps · Deployed on Azure</p>
+    <h1>Caring for pets is a team effort.</h1>
+    <p class="lede">PetCare is a household pet management app: create or join a household with a unique code, add your pets, and log everything from feeding to vet visits — backed by a full production pipeline with CI/CD, monitoring, and 91% test coverage.</p>
+    <div class="cta">
+      <a class="btn" href="#features">See features →</a>
+      <a class="btn ghost" href="#stack">The stack</a>
+    </div>
+
+    <div class="demo" id="demo">
+      <div class="top">
+        <div class="t">The Olsen household</div>
+        <div class="code">join code · PET-4Q7K</div>
+      </div>
+      <div class="body">
+        <div class="pets">
+          <p class="lbl">Pets</p>
+          <div id="petlist"></div>
+        </div>
+        <div class="log">
+          <p class="lbl">Log for <span id="curpet"></span></p>
+          <div class="addrow" id="addrow">
+            <button data-k="feed">🍽 Feeding</button>
+            <button data-k="vet">🏥 Vet visit</button>
+            <button data-k="walk">🚶 Walk</button>
+            <button data-k="meds">💊 Meds</button>
+            <button data-k="groom">🛁 Groom</button>
+          </div>
+          <div class="timeline" id="timeline"></div>
+        </div>
+      </div>
+    </div>
+    <p style="font-size:.8rem;color:var(--muted);margin-top:10px">↑ A scripted illustration — pick a pet and log an entry to see the household timeline update.</p>
+  </div>
+</div>
+
+<section id="features">
+  <div class="wrap reveal">
+    <p class="eyebrow">01 — Features</p>
+    <h2>One household, every pet, all in sync.</h2>
+    <div class="grid3">
+      <div class="card"><div class="ic">🏠</div><h3>Households</h3><p>Create or join a household with a unique join code.</p></div>
+      <div class="card"><div class="ic">🐕</div><h3>Pets</h3><p>Add, edit, and delete the pets your household looks after.</p></div>
+      <div class="card"><div class="ic">📒</div><h3>Log entries</h3><p>Record feeding, vet visits, walks and more for each pet.</p></div>
+      <div class="card"><div class="ic">👥</div><h3>Members</h3><p>View and manage who's part of the household.</p></div>
+      <div class="card"><div class="ic">🔐</div><h3>Accounts</h3><p>Login, signup, and profile management.</p></div>
+      <div class="card"><div class="ic">🔌</div><h3>REST API + UI</h3><p>Both API routes and a friendly web interface.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="quality">
+  <div class="wrap reveal">
+    <p class="eyebrow">02 — Production quality</p>
+    <h2>Not just a demo — a pipeline.</h2>
+    <p class="section-lede">PetCare was hardened with real DevOps practices: automated testing, CI/CD, containerization, monitoring, and cloud deployment.</p>
+    <div class="stats">
+      <div class="stat"><div class="num" data-target="91">0</div><div class="lab">% test coverage (Pytest)</div></div>
+      <div class="stat"><div class="num">CI/CD</div><div class="lab">GitHub Actions → Azure</div></div>
+      <div class="stat"><div class="num">/health</div><div class="lab">+ Prometheus /metrics</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="stack">
+  <div class="wrap reveal">
+    <p class="eyebrow">03 — Stack</p>
+    <h2>Built with.</h2>
+    <div class="specs">
+      <div class="spec"><b>Framework</b><span>Flask (Python 3.12)</span></div>
+      <div class="spec"><b>Database</b><span>PostgreSQL Flexible (Azure)</span></div>
+      <div class="spec"><b>ORM</b><span>SQLAlchemy + Flask-Migrate</span></div>
+      <div class="spec"><b>Testing</b><span>Pytest + Pytest-Cov</span></div>
+      <div class="spec"><b>CI/CD</b><span>GitHub Actions + Docker</span></div>
+      <div class="spec"><b>Container</b><span>Docker Hub image</span></div>
+      <div class="spec"><b>Monitoring</b><span>Prometheus · /health</span></div>
+      <div class="spec"><b>Cloud</b><span>Microsoft Azure Web App</span></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    PetCare · an interactive project showcase, built from scratch.
+    The household demo above uses sample data.
+  </div>
+</footer>
+
+<script>
+  const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}})},{threshold:.15});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+  const so=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){const t=+e.target.dataset.target;let c=0;const step=t/40;const tick=()=>{c+=step;if(c>=t){e.target.textContent=t;}else{e.target.textContent=Math.round(c);requestAnimationFrame(tick);}};tick();so.unobserve(e.target);}})},{threshold:.5});
+  document.querySelectorAll('.stat .num[data-target]').forEach(el=>so.observe(el));
+
+  const KIND={
+    feed:{i:'🍽',t:'Fed — full bowl'},
+    vet:{i:'🏥',t:'Vet visit logged'},
+    walk:{i:'🚶',t:'Went for a walk'},
+    meds:{i:'💊',t:'Medication given'},
+    groom:{i:'🛁',t:'Grooming session'},
+  };
+  const PETS=[
+    {id:'luna',nm:'Luna',sp:'Cat · 3 yr',av:'🐈',log:[{i:'🍽',t:'Fed — full bowl',m:'2h ago'},{i:'🛁',t:'Grooming session',m:'yesterday'}]},
+    {id:'max', nm:'Max', sp:'Dog · 5 yr',av:'🐕',log:[{i:'🚶',t:'Went for a walk',m:'1h ago'},{i:'🏥',t:'Vet visit logged',m:'last week'}]},
+    {id:'kiwi',nm:'Kiwi',sp:'Parrot · 2 yr',av:'🦜',log:[{i:'🍽',t:'Fed — seed mix',m:'4h ago'}]},
+  ];
+  let cur='luna';
+  const petlist=document.getElementById('petlist');
+  const timeline=document.getElementById('timeline');
+  const curpet=document.getElementById('curpet');
+
+  function pet(){ return PETS.find(p=>p.id===cur); }
+  function renderPets(){
+    petlist.innerHTML=PETS.map(p=>`<div class="petcard" data-id="${p.id}" aria-pressed="${p.id===cur}">
+      <span class="av">${p.av}</span><div><div class="nm">${p.nm}</div><div class="sp">${p.sp}</div></div></div>`).join('');
+  }
+  function renderLog(){
+    const p=pet(); curpet.textContent=p.nm;
+    timeline.innerHTML=p.log.map(e=>`<div class="entry"><span class="ei">${e.i}</span><div><div class="et">${e.t}</div><div class="em">${e.m}</div></div></div>`).join('');
+  }
+  petlist.addEventListener('click',e=>{const c=e.target.closest('.petcard');if(!c)return;cur=c.dataset.id;renderPets();renderLog();});
+  document.getElementById('addrow').addEventListener('click',e=>{
+    const b=e.target.closest('button');if(!b)return;
+    const k=KIND[b.dataset.k]; pet().log.unshift({i:k.i,t:k.t,m:'just now'}); renderLog();
+  });
+  renderPets(); renderLog();
+</script>
+</body>
+</html>
