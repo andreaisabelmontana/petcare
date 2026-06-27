@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>PetCare · Household pet management, done together</title>
-<meta name="description" content="PetCare is a household pet management app: create or join a household, add pets, and log feeding, vet visits and more — with a full production pipeline on Azure. An interactive project showcase." />
+<title>PetCare · Household pet management in Python</title>
+<meta name="description" content="PetCare is a SQLite-backed household pet management core in Python: pets, members, activity logs and recurring reminders, with analytics for age, weight trends, what's due and medication adherence. Interactive showcase over the committed sample household." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -131,9 +131,9 @@
 
 <div class="hero">
   <div class="wrap">
-    <p class="kicker">Flask Web App · DevOps · Deployed on Azure</p>
+    <p class="kicker">Python · SQLite · Domain analytics</p>
     <h1>Caring for pets is a team effort.</h1>
-    <p class="lede">PetCare is a household pet management app: create or join a household with a unique code, add your pets, and log everything from feeding to vet visits — backed by a full production pipeline with CI/CD, monitoring, and 91% test coverage.</p>
+    <p class="lede">PetCare is a household pet-management core in Python: a SQLite-backed store for pets, members, activity logs and recurring reminders — plus the analytics that make the data useful: age, weight trends, what's due, and medication adherence. Standard library only, with a tested CLI.</p>
     <div class="cta">
       <a class="btn" href="#features">See features →</a>
       <a class="btn ghost" href="#stack">The stack</a>
@@ -153,16 +153,16 @@
           <p class="lbl">Log for <span id="curpet"></span></p>
           <div class="addrow" id="addrow">
             <button data-k="feed">🍽 Feeding</button>
-            <button data-k="vet">🏥 Vet visit</button>
             <button data-k="walk">🚶 Walk</button>
-            <button data-k="meds">💊 Meds</button>
-            <button data-k="groom">🛁 Groom</button>
+            <button data-k="meds">💊 Medication</button>
+            <button data-k="weight">⚖️ Weight</button>
+            <button data-k="vet">🏥 Vet visit</button>
           </div>
           <div class="timeline" id="timeline"></div>
         </div>
       </div>
     </div>
-    <p style="font-size:.8rem;color:var(--muted);margin-top:10px">↑ A scripted illustration — pick a pet and log an entry to see the household timeline update.</p>
+    <p style="font-size:.8rem;color:var(--muted);margin-top:10px">↑ An in-browser illustration over the committed <code>data/sample.db</code> household. The real backend is Python — the <code>petcare</code> package and CLI in this repo. Pick a pet and log an entry to see the timeline update.</p>
   </div>
 </div>
 
@@ -171,25 +171,25 @@
     <p class="eyebrow">01 — Features</p>
     <h2>One household, every pet, all in sync.</h2>
     <div class="grid3">
-      <div class="card"><div class="ic">🏠</div><h3>Households</h3><p>Create or join a household with a unique join code.</p></div>
-      <div class="card"><div class="ic">🐕</div><h3>Pets</h3><p>Add, edit, and delete the pets your household looks after.</p></div>
-      <div class="card"><div class="ic">📒</div><h3>Log entries</h3><p>Record feeding, vet visits, walks and more for each pet.</p></div>
-      <div class="card"><div class="ic">👥</div><h3>Members</h3><p>View and manage who's part of the household.</p></div>
-      <div class="card"><div class="ic">🔐</div><h3>Accounts</h3><p>Login, signup, and profile management.</p></div>
-      <div class="card"><div class="ic">🔌</div><h3>REST API + UI</h3><p>Both API routes and a friendly web interface.</p></div>
+      <div class="card"><div class="ic">🏠</div><h3>Households &amp; members</h3><p>A household with members and a unique join code; pets belong to a household.</p></div>
+      <div class="card"><div class="ic">🐕</div><h3>Pets</h3><p>Name, species, breed, birthdate and weight — full CRUD, persisted to SQLite.</p></div>
+      <div class="card"><div class="ic">📒</div><h3>Activity logs</h3><p>Timestamped feeding, walk, medication, weight and vet-visit entries per pet.</p></div>
+      <div class="card"><div class="ic">⏰</div><h3>Reminders</h3><p>Fixed-interval schedules (meds every 12h, annual shots) with a "what's due" query.</p></div>
+      <div class="card"><div class="ic">📈</div><h3>Analytics</h3><p>Age from birthdate, weight-trend detection, next-due dates, medication adherence.</p></div>
+      <div class="card"><div class="ic">⌨️</div><h3>CLI</h3><p><code>add-pet</code> · <code>log</code> · <code>due</code> · <code>stats</code> over a SQLite database file.</p></div>
     </div>
   </div>
 </section>
 
 <section id="quality">
   <div class="wrap reveal">
-    <p class="eyebrow">02 — Production quality</p>
-    <h2>Not just a demo — a pipeline.</h2>
-    <p class="section-lede">PetCare was hardened with real DevOps practices: automated testing, CI/CD, containerization, monitoring, and cloud deployment.</p>
+    <p class="eyebrow">02 — Analytics &amp; tests</p>
+    <h2>The logic that makes the data useful.</h2>
+    <p class="section-lede">Pure functions over the store turn raw entries into answers: how old is the pet, is it gaining or losing weight, what's due now, and were the meds actually given? Each is covered by the pytest suite.</p>
     <div class="stats">
-      <div class="stat"><div class="num" data-target="91">0</div><div class="lab">% test coverage (Pytest)</div></div>
-      <div class="stat"><div class="num">CI/CD</div><div class="lab">GitHub Actions → Azure</div></div>
-      <div class="stat"><div class="num">/health</div><div class="lab">+ Prometheus /metrics</div></div>
+      <div class="stat"><div class="num" data-target="19">0</div><div class="lab">passing pytest tests</div></div>
+      <div class="stat"><div class="num">5</div><div class="lab">analytics: age · trend · due · adherence · summary</div></div>
+      <div class="stat"><div class="num">0</div><div class="lab">third-party runtime deps</div></div>
     </div>
   </div>
 </section>
@@ -199,22 +199,22 @@
     <p class="eyebrow">03 — Stack</p>
     <h2>Built with.</h2>
     <div class="specs">
-      <div class="spec"><b>Framework</b><span>Flask (Python 3.12)</span></div>
-      <div class="spec"><b>Database</b><span>PostgreSQL Flexible (Azure)</span></div>
-      <div class="spec"><b>ORM</b><span>SQLAlchemy + Flask-Migrate</span></div>
-      <div class="spec"><b>Testing</b><span>Pytest + Pytest-Cov</span></div>
-      <div class="spec"><b>CI/CD</b><span>GitHub Actions + Docker</span></div>
-      <div class="spec"><b>Container</b><span>Docker Hub image</span></div>
-      <div class="spec"><b>Monitoring</b><span>Prometheus · /health</span></div>
-      <div class="spec"><b>Cloud</b><span>Microsoft Azure Web App</span></div>
+      <div class="spec"><b>Language</b><span>Python 3.12 (3.10+)</span></div>
+      <div class="spec"><b>Storage</b><span>SQLite (stdlib sqlite3)</span></div>
+      <div class="spec"><b>Model</b><span>dataclasses + enums</span></div>
+      <div class="spec"><b>CLI</b><span>argparse</span></div>
+      <div class="spec"><b>Testing</b><span>pytest · 19 tests</span></div>
+      <div class="spec"><b>Runtime deps</b><span>none (stdlib only)</span></div>
+      <div class="spec"><b>Sample data</b><span>data/sample.db (committed)</span></div>
+      <div class="spec"><b>License</b><span>MIT</span></div>
     </div>
   </div>
 </section>
 
 <footer>
   <div class="wrap">
-    PetCare · an interactive project showcase, built from scratch.
-    The household demo above uses sample data.
+    PetCare · a Python pet-management core (SQLite store + analytics + CLI), with this showcase page over it.
+    The household widget above is an in-browser illustration of the committed sample data; the real backend is the <code>petcare</code> package in this repo.
   </div>
 </footer>
 
@@ -227,15 +227,14 @@
 
   const KIND={
     feed:{i:'🍽',t:'Fed — full bowl'},
-    vet:{i:'🏥',t:'Vet visit logged'},
-    walk:{i:'🚶',t:'Went for a walk'},
+    walk:{i:'🚶',t:'Walk — park'},
     meds:{i:'💊',t:'Medication given'},
-    groom:{i:'🛁',t:'Grooming session'},
+    weight:{i:'⚖️',t:'Weight measured'},
+    vet:{i:'🏥',t:'Vet visit logged'},
   };
   const PETS=[
-    {id:'luna',nm:'Luna',sp:'Cat · 3 yr',av:'🐈',log:[{i:'🍽',t:'Fed — full bowl',m:'2h ago'},{i:'🛁',t:'Grooming session',m:'yesterday'}]},
-    {id:'max', nm:'Max', sp:'Dog · 5 yr',av:'🐕',log:[{i:'🚶',t:'Went for a walk',m:'1h ago'},{i:'🏥',t:'Vet visit logged',m:'last week'}]},
-    {id:'kiwi',nm:'Kiwi',sp:'Parrot · 2 yr',av:'🦜',log:[{i:'🍽',t:'Fed — seed mix',m:'4h ago'}]},
+    {id:'luna',nm:'Luna',sp:'Cat · 4 yr · gaining',av:'🐈',log:[{i:'🍽',t:'Fed — full bowl',m:'today 19:00'},{i:'⚖️',t:'Weighed — 4.4 kg',m:'today 09:00'},{i:'🍽',t:'Fed — full bowl',m:'today 08:00'}]},
+    {id:'max', nm:'Max', sp:'Dog · 6 yr · meds 12h',av:'🐕',log:[{i:'💊',t:'Apoquel given',m:'today 08:00'},{i:'🚶',t:'Walk — park',m:'yesterday 17:00'},{i:'🏥',t:'Vet visit logged',m:'last month'}]},
   ];
   let cur='luna';
   const petlist=document.getElementById('petlist');

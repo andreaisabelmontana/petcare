@@ -1,0 +1,4 @@
+# PetCare application core has no third-party runtime dependencies —
+# it uses only the Python 3.10+ standard library (sqlite3, argparse, dataclasses).
+# The test suite uses pytest.
+pytest>=8.0
